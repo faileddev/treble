@@ -15,7 +15,7 @@ export default function Home() {
           <w3m-button />
         </div>
     <div className={styles.container}>
-      <div>
+      <div style={{marginBottom: "60px"}}>
       <Image style={{height: "500px", width: "500px"}}
                   src={Metamask}
                   alt='mm'/>
