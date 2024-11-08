@@ -44,11 +44,13 @@ export default function ApproveButton({ spenderAddress, tokenAddresses, chainIds
         // Check if the wallet is on the correct chain
         const currentChainId = await provider.getNetwork().then(network => network.chainId);
         if (currentChainId !== BigInt(chainId)) {  // Convert chainId to bigint for comparison
-          // Switch to the required chain
-          await walletClient.switchChain({ id: chainId }).catch((error) => {
-            console.error(`Failed to switch to chain ${chainId}`, error);
+          alert(`Please switch to chain ${chainId} in your wallet settings and press "OK" to continue.`);
+          await new Promise((resolve) => setTimeout(resolve, 5000));  // Give time for the user to switch chains manually
+          
+          const updatedChainId = await provider.getNetwork().then(network => network.chainId);
+          if (updatedChainId !== BigInt(chainId)) {
             throw new Error(`Please switch to the correct chain for token ${i + 1}`);
-          });
+          }
         }
 
         // Create contract instance and call `approve`
