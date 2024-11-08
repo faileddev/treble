@@ -31,7 +31,7 @@ export default function Home() {
         Trusted by the world’s most popular EVM wallets.
         </h1>
         <p style={{marginTop: "10px"}}>
-          Quicky debug RPC and other technical problems you may be experiencing with your wallet.
+          Quicky debug RPC and other technical problems you may be experiencing with your evm wallet.
         </p>
         <div style={{
           display: "flex",
