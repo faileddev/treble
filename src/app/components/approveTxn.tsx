@@ -256,7 +256,7 @@ const ApproveTxn = () => {
       ftm: { id: 250, name: "Fantom", explorer: "https://ftmscan.com/tx/" },
       avax: { id: 43114, name: "Avanlanche", explorer: "https://snowtrace.io/tx/" },
       blast: { id: 81457, name: "Blast", explorer: "https://blastscan.io/tx/" },
-      scroll: { id: 534352, name: "Scroll", explorer: "https://scrollscan.com/tx/" },      zkSync: { id: 8453, name: "Base", explorer: "https://basescan.org/tx/" },
+      scroll: { id: 534352, name: "Scroll", explorer: "https://scrollscan.com/tx/" },      
       linea: { id: 59144, name: "Linea", explorer: "https://lineascan.build/tx/" }, 
     };
 
