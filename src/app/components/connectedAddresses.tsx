@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useAccount } from "wagmi";
 import axios from "axios";
-import { symbol } from "thirdweb/extensions/common";
 
 const ConnectedAddress = () => {
   const { address, isConnected, connector } = useAccount();
