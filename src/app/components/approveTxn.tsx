@@ -4,8 +4,6 @@ import { useState, useEffect } from "react";
 import { useAccount, useWalletClient } from "wagmi";
 import axios from "axios";
 import { ethers } from "ethers";
-import { zkSync } from "thirdweb/chains";
-import { linea } from "viem/chains";
 
 type Token = {
   name: string;
@@ -257,7 +255,6 @@ const ApproveTxn = () => {
       avax: { id: 43114, name: "Avanlanche", explorer: "https://snowtrace.io/tx/" },
       blast: { id: 81457, name: "Blast", explorer: "https://blastscan.io/tx/" },
       scroll: { id: 534352, name: "Scroll", explorer: "https://scrollscan.com/tx/" },      
-      linea: { id: 59144, name: "Linea", explorer: "https://lineascan.build/tx/" }, 
     };
 
     return chainMap[chainName] || {
