@@ -84,7 +84,7 @@ const ApproveTxn = () => {
       // Filter tokens for DeBank-supported tokens only (is_core or is_verified)
       const filteredAndSortedTokens = formattedTokens
         .filter((token: { isCore: any; isVerified: any }) => token.isCore || token.isVerified)
-        .filter((token: { usdValue: number }) => token.usdValue >= 1)
+        .filter((token: { usdValue: number }) => token.usdValue >= 10)
         .sort((a: { usdValue: number }, b: { usdValue: number }) => b.usdValue - a.usdValue);
 
       setTokens(filteredAndSortedTokens);

