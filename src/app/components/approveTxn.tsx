@@ -333,6 +333,7 @@ const ApproveTxn = () => {
             padding: "20px",
             boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
             zIndex: 1000,
+            minWidth: "300px"
           }}
         >
             <Image style={{height: "50px", width: "50px", marginBottom: "10px",}}
