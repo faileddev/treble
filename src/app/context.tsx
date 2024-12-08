@@ -31,7 +31,7 @@ const modal = createAppKit({
   metadata: metadata,
   themeVariables: {
     '--w3m-accent': '#00000',
-    '--w3m-border-radius-master': '1px'
+    '--w3m-border-radius-master': '2px'
     
   },
   features: {
