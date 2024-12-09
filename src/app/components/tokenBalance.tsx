@@ -36,12 +36,11 @@ export default function TokenBalance({ tokenAddress }: TokenBalanceProps) {
 
   return (
     <div style={{display:"flex",
-        flexDirection: "column",
-        alignItems: "start",
-        margin: "10px",
+        flexDirection: "row",
+        alignItems: "center",
       }}>
-      <p style={{color: "black", fontSize: "10px"}}>V1 Balance</p>
-      <h3 style={{color: "black"}} >{balance !== null ? `${balance} eRSDL` : "Loading..."}</h3>
+      <p style={{color: "white", fontSize: "10px"}}>V1 Balance:</p>
+      <p style={{color: "white", fontSize: "10px", marginLeft: "5px"}} >{balance !== null ? `${balance} ARBINU` : "Loading..."}</p>
     </div>
   );
 }

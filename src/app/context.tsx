@@ -30,7 +30,7 @@ const modal = createAppKit({
   defaultNetwork: mainnet,
   metadata: metadata,
   themeVariables: {
-    '--w3m-accent': '#00000',
+    '--w3m-accent': '#015efe',
     '--w3m-border-radius-master': '2px'
     
   },

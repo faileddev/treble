@@ -175,6 +175,16 @@ a.secondary {
   min-height: 100vh;
   padding: 20px;
   background-color: #000000;
+  
+}
+
+.migrationContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+  gap: 10px;
+  max-width: 900px;
 }
 
 .card {
@@ -229,4 +239,10 @@ a.secondary {
   flex-direction: row;
   justify-Content: space-between;
   margin: 10px;
+}
+
+@media (max-width: 768px) {
+  .migrationContainer {
+    flex-direction: column;
+  }
 }
