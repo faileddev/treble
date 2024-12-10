@@ -17,8 +17,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Restore dApp",
-  description: "Fix all your EVM related issues",
+  title: "ARBINU - Migration",
+  description: "Migrate your ARBINU tokens",
 };
 
 export default async function RootLayout({
