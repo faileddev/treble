@@ -106,28 +106,8 @@ const migratePage = () => {
             borderRadius: "20px",
             gap: "10px"
           }}>
-             <TokenBalance tokenAddress={"0x0776a8234D6D927fF5Cb03CbCdc5756DD4340A1f"} />
            
-            <input
-                                type="number"
-                                placeholder="100"
-                                value={depositAmount}
-                                onChange={(e) => setDepositAmount(Number(e.target.value))}
-                                style={{
-                                    color: "white",
-                                    border: "solid",
-                                    borderColor: "#1b1f2e",
-                                    borderWidth: "1px",
-                                    borderRadius: "15px",
-                                    height: "40px",
-                                    fontSize: "12px",
-                                    padding: "10px",
-                                    backgroundColor: "#1b1f2e",                                }}
-
-                                
-                                
-                                
-                                />
+            
             <div style={{
               display: "flex",
               flexDirection: "row",
