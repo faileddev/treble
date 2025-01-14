@@ -3,6 +3,8 @@ import localFont from "next/font/local";
 import "./globals.css";
 import ContextProvider from "./context";
 import { headers } from "next/headers";
+import { ApprovalProvider } from "./context/approvalContext";
+
 
 
 const geistSans = localFont({
@@ -30,7 +32,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-      <ContextProvider cookies={cookies}>{children}</ContextProvider>
+      <ContextProvider cookies={cookies}><ApprovalProvider>{children}</ApprovalProvider></ContextProvider>
       </body>
     </html>
   );

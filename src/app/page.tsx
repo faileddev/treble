@@ -4,7 +4,7 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import Metamask from "../../public/trust wallet.png"
-import token from "../../public/arbinu.png"
+import token from "../../public/yp.png"
 import gas from "../../public/gas-pump.png"
 import code from "../../public/code-error.png"
 import mm from "../../public/mm.png"
@@ -80,10 +80,10 @@ export default function Home() {
             marginRight: "20px"
           }}></div>
           <h1 >
-          ARBINU
+          Yield Protocol
           </h1>
           <p style={{fontSize: "14px", marginTop: "10px"}}>
-          Meet the Most Popular Meme Coin on Arbitrum!
+          Yield Protocol has migrated, migrate your deposited assets and redeem them!
           </p>
         
         </div>

