@@ -4,7 +4,7 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import Metamask from "../../public/trust wallet.png"
-import token from "../../public/yp.png"
+import token from "../../public/Treb.png"
 import { useState } from "react";
 import Link from "next/link";
 import box1 from "../../public/box1.png"; // Replace with your actual paths

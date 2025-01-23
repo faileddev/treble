@@ -4,7 +4,7 @@
 import Image from "next/image";
 import styles from "./page.module.css";
 import Metamask from "../../public/trust wallet.png"
-import token from "../../../public/yp.png"
+import token from "../../../public/Treb.png"
 import gas from "../../public/gas-pump.png"
 import code from "../../public/code-error.png"
 import mm from "../../public/mm.png"
