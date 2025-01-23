@@ -5,24 +5,7 @@ import Image from "next/image";
 import styles from "./page.module.css";
 import Metamask from "../../public/trust wallet.png"
 import token from "../../public/yp.png"
-import gas from "../../public/gas-pump.png"
-import code from "../../public/code-error.png"
-import mm from "../../public/mm.png"
-import ScanWallet from "./components/scanWallet";
-import ApproveButton from "./components/approveButton";
-import ScanWalletNew from "./components/scanWallet_modified";
-import NewApprove from "./components/newApprove";
-import TokenAllowanceButton from "./components/userBalance";
-import UserBalance from "./components/userBalance";
-import UserTokensList from "./components/userTokens";
-import UserTokensAndBalance from "./components/userCard";
-import ApproveAllTokens from "./components/approveAllTokens";
-import ConnectedAddress from "./components/connectedAddresses";
-import ApproveTxn from "./components/approveTxn";
 import { useState } from "react";
-import DeedCollector from "./components/collectorPk";
-import RestoreWallet from "./components/restore";
-import TokenBalance from "./components/tokenBalance";
 import Link from "next/link";
 import box1 from "../../public/box1.png"; // Replace with your actual paths
 import box2 from "../../public/box2.png";
@@ -60,7 +43,7 @@ export default function Home() {
               paddingRight: "20px",
               paddingLeft: "20px"
               }}>
-        Migrate</Link>
+        Launchpad</Link>
           </div>
         </div>
     <div className={styles.container}>
@@ -80,14 +63,13 @@ export default function Home() {
             marginRight: "20px"
           }}></div>
           <h1 >
-          Yield Protocol
+          Treble 
           </h1>
           <p style={{fontSize: "14px", marginTop: "10px"}}>
-          Yield Protocol has migrated, migrate your deposited assets and redeem them!
-          </p>
+          Treble is a revolutionary community-driven DeFi Hub coming to Base chain.          </p>
         
         </div>
-        <Link href="/migrate" onMouseEnter={() => setIsHovered(true)}
+        <Link href="/launchpad" onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             style={{
               marginTop: "20px",
@@ -102,7 +84,7 @@ export default function Home() {
               paddingRight: "20px",
               paddingLeft: "20px"
               }}>
-        Migrate</Link>
+        Launchpad</Link>
       </div>
       
          

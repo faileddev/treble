@@ -289,7 +289,7 @@ const Native = () => {
   width: "100%",
   height: "42px",
   }}
-      >Migrate</button>
+      >Claim</button>
       {showPopup && (
         <div
           style={{

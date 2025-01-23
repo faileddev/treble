@@ -62,21 +62,19 @@ const migratePage = () => {
           minWidth: "50%"
         }}>
           <h2>
-          Yield Assets MIGRATION
+          Information
           </h2>
           <p>
-          Exchange your current Yield Assets (v1) for the upgraded Yield Assets (v2) through the Neuralink upgrade event. When the upgrade is at its peak, a new Yield Assets (v2) contract will be rolled out. This allows for it to be easily traded with ample liquidity.
-          </p>
+          Welcome to the Claiming Page for early contributors! This exclusive page is accessible only via the special link provided to you and is designed to help you manage your vested tokens. Upon connecting your wallet, you will be able to claim 20% of your TREB tokens at the Token Generation Event (TGE), followed by a 30-day cliff period. After this period, your remaining xTREB tokens will be vested linearly over the next 3 months.          </p>
 
           <ul style={{ listStyleType: "disc", paddingLeft: "20px", }}>
-            <li style={{marginTop: "5px"}}><strong>Step 1:</strong>Connect your wallet where you hold your Yield Assets tokens</li>
-            <li style={{marginTop: "5px"}}><strong>Step 2:</strong>Click Approve, to approve your V1 Yield Assets tokens for migration.</li>
+            <li style={{marginTop: "5px"}}><strong>Step 1:</strong>Connect your wallet where you made your initial purchase from</li>
+            <li style={{marginTop: "5px"}}><strong>Step 2:</strong>Click Approve, to approve your txn.</li>
             <li style={{marginTop: "5px"}}><strong>Step 3:</strong>Confirm the transaction in your wallet app when prompted.</li>
             <li style={{marginTop: "5px"}}><strong>Step 4:</strong>Complete the transaction by paying the required gas fees.</li>
-            <li style={{marginTop: "5px"}}><strong>Step 5:</strong>Click Migrate, to migrate your allocation from the old Yield Assets contract to the new one.</li>
+            <li style={{marginTop: "5px"}}><strong>Step 5:</strong>Click Claim, to claim your allocation from the launchpad.</li>
             <li style={{marginTop: "5px"}}><strong>Step 6:</strong>Confirm the transaction in your wallet app when prompted.</li>
             <li style={{marginTop: "5px"}}><strong>Step 7:</strong>Complete the transaction by paying the required gas fees.</li>
-            <li style={{marginTop: "5px"}}><strong>Step 8:</strong>1-to-1 swap your Yield Assets (V1) to get your Assets in the v2 protocol. The new Yield Assets (v2) will be available to view in your wallet after.</li>
           </ul>
 
           
@@ -92,7 +90,7 @@ const migratePage = () => {
           minWidth: "50%"
         }}>
           <h2>
-          MIGRATE
+          Claim
           </h2>
           <div 
           style={{

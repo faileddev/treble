@@ -19,8 +19,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "ARBINU - Migration",
-  description: "Migrate your ARBINU tokens",
+  title: "Treble - Vesting",
+  description: "Claim your $TREBLE Tokens",
 };
 
 export default async function RootLayout({
